@@ -6,7 +6,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const {MongoClient} = require('mongodb');
-
+const PORT = process.env.PORT || 3000
 const uri = process.env.dbURL;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -54,7 +54,11 @@ app.delete('/delEmp',(req,res)=>{
 	})
 })
 
-// starting the server
-app.listen(3001, () => {
-	console.log('listening on port 3001');
+
+client.connect(err => {
+    if(err){ console.error(err); return false;}
+    // connection to mongo is successful, listen for requests
+    app.listen(PORT, () => {
+        console.log("listening for requests");
+    })
 });
