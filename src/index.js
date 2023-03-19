@@ -19,10 +19,12 @@ app.get('/getEmp', async (req, res) => {
 });
 
 
-client.connect(err => {
-    if(err){ console.error(err); return false;}
+client.connect(
     // connection to mongo is successful, listen for requests
-    app.listen(PORT, () => {
+    app.listen(3000, () => {
         console.log("listening for requests");
-    })
-});
+    }),
+
+    col = client.db("ESD").collection("Employee")
+
+);
