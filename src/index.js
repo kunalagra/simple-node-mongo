@@ -13,8 +13,9 @@ const client = new MongoClient(uri);
 
 // Fetch All Employee
 app.get('/getEmp', async (req, res) => {
-	let cursor = await client.db("ESD").collection("Employee").find().toArray()
-	return res.send(cursor)
+	cursor = client.db("ESD").collection("Employee").find()
+	data = await cursor.toArray()
+	return res.json(data)
 });
 
 
