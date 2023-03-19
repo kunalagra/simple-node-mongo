@@ -10,25 +10,23 @@ const PORT = process.env.PORT || 3000
 const uri = process.env.dbURL;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-col = client.db("ESD").collection("Employee")
 
 // Fetch All Employee
-app.get('/getEmp', (req, res) => {
-	const cursor = col.find()
-	cursor.toArray()
-	.then(data => {res.json(data)})
+app.get('/getEmp', async (req, res) => {
+	let cursor = await client.db("ESD").collection("Employee").find().toArray()
+	return res.send(cursor)
 });
 
 // Add Employee
-app.post('/addEmp', (req, res) => {
-	col.insertOne(req.body)
+app.post('/addEmp', async (req, res) => {
+	client.db("ESD").collection("Employee").insertOne(req.body)
 	.then(res.status(200).send("User Addded "))
 	.catch((e)=>res.send(e))
 })
 
 // Update/Insert Employee
-app.put('/updEmp', (req, res) => {
-	col.updateOne({"PHONE_NUMBER": req.body.PHONE_NUMBER}, 
+app.put('/updEmp', async (req, res) => {
+	client.db("ESD").collection("Employee").updateOne({"PHONE_NUMBER": req.body.PHONE_NUMBER}, 
 		{"$set": req.body},{upsert:true}).then(data => {
 			if (data.modifiedCount == 1){
 				res.status(200).send("User Updated!")
@@ -40,8 +38,8 @@ app.put('/updEmp', (req, res) => {
 	})
 
 // Delete Employee
-app.delete('/delEmp',(req,res)=>{
-	col.deleteOne({"PHONE_NUMBER": req.body.PHONE_NUMBER})
+app.delete('/delEmp',async (req,res)=>{
+	client.db("ESD").collection("Employee").deleteOne({"PHONE_NUMBER": req.body.PHONE_NUMBER})
 	.then(data=> {
 		if (data.deletedCount==1){
 
